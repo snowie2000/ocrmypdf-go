@@ -25,6 +25,7 @@ import (
 
 // Command to execute - USE HTOP FOR TESTING THIS FIX
 var (
+	appDir         string
 	fileLocation         = "files/"
 	outputLocation       = "output/"
 	taskCounter    int32 = 0
@@ -48,8 +49,9 @@ type Resp struct {
 }
 
 func main() {
-	fileLocation = path.Join(path.Dir(os.Args[0]), fileLocation)
-	outputLocation = path.Join(path.Dir(os.Args[0]), outputLocation)
+	appDir = path.Dir(os.Args[0])
+	fileLocation = path.Join(appDir, fileLocation)
+	outputLocation = path.Join(appDir, outputLocation)
 
 	// make sure these folders exist
 	os.MkdirAll(fileLocation, 0755)
@@ -68,7 +70,7 @@ func main() {
 }
 
 func serveHTML(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "index.html")
+	http.ServeFile(w, r, appDir+"/index.html")
 }
 
 func langList(w http.ResponseWriter, r *http.Request) {
