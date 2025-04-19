@@ -263,7 +263,6 @@
     <style>
       #terminal {
         /* Window appearance */
-        height: 400px; /* Adjust as needed */
         background-color: #1e1e1e; /* Dark background for the terminal content */
         border-radius: 9px;
         box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3); /* Subtle shadow */
@@ -482,7 +481,14 @@
           <h2>Select PDF:</h2>
           <div id="uploader">
             <div class="mac-file-input">
-              <input type="file" id="file" name="file" accept=".pdf" class="hidden" onchange="handleFileSelected(this)" />
+              <input
+                type="file"
+                id="file"
+                name="file"
+                accept=".pdf"
+                class="hidden"
+                onchange="handleFileSelected(this)"
+              />
               <label for="file" class="mac-file-input-button">Choose File...</label>
               <span class="mac-file-input-name">No file chosen</span>
             </div>
@@ -815,7 +821,9 @@
         const terminalContainer = document.getElementById("terminal")
         const terminalContent = document.getElementById("term-content")
         // scroll body to the bottom
-        terminalContainer.scrollTop = terminalContainer.scrollHeight
+        setTimeout(() => {
+          terminalContainer.scrollTop = terminalContainer.scrollHeight
+        }, 300)
 
         let evtSource = null
 
