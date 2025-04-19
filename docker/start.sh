@@ -1,4 +1,4 @@
 #!/bin/bash
 
-bash langinit.sh
+bash /opt/langinit.sh
 /opt/ocrmypdf-go

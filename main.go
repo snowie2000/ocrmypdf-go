@@ -62,7 +62,7 @@ func main() {
 	http.HandleFunc("/retrieve", downloadAsset)
 	http.HandleFunc("/langlist", langList)
 
-	fmt.Println("Server started on http://localhost:8080")
+	fmt.Println("Server started on http://0.0.0.0:8080")
 	installedLangs, _ = GetInstalledTesseractLanguages()
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
