@@ -652,7 +652,7 @@
         const languageSelector = document.getElementById("languageSelector")
         languageSelector.innerHTML = "" // Clear any existing content
         request("/langlist").then((res) => {
-          const langSet = new Set(res ?? ["eng"])
+          const langSet = new Set(res)
           // appending a language checkbox list from languages to the languageSelector div
           languages.forEach((lang) => {
             const langCode = Object.keys(lang)[0]
