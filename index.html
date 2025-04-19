@@ -244,7 +244,7 @@
 
       /* Thumb */
       ::-webkit-scrollbar-thumb {
-        background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent dark gray thumb */
+        background-color: rgba(155, 155, 155, 0.3); /* Semi-transparent dark gray thumb */
         border-radius: 10px; /* Rounded corners for the thumb */
         border: 2px solid transparent; /* Add a transparent border to make the thumb thinner visually */
         background-clip: padding-box; /* Ensure the border does not affect the background color area */
@@ -252,7 +252,7 @@
 
       /* Thumb on hover */
       ::-webkit-scrollbar-thumb:hover {
-        background-color: rgba(0, 0, 0, 0.5); /* Slightly darker on hover */
+        background-color: rgba(155, 155, 155, 0.5); /* Slightly darker on hover */
       }
 
       /* Corner (the square where horizontal and vertical scrollbars meet) */
@@ -263,7 +263,6 @@
     <style>
       #terminal {
         /* Window appearance */
-        width: 600px; /* Adjust as needed */
         height: 400px; /* Adjust as needed */
         background-color: #1e1e1e; /* Dark background for the terminal content */
         border-radius: 9px;
@@ -393,7 +392,7 @@
       /* Terminal Content Area */
       #terminal .terminal-content {
         flex-grow: 1; /* Fill remaining space */
-        padding: 25px 10px 10px 10px; /* Add padding, more at the top to clear title bar */
+        padding: 25px 0 10px 10px; /* Add padding, more at the top to clear title bar */
         overflow-y: auto; /* Add scroll if content exceeds height */
         position: relative; /* Context for absolute positioning if needed */
         z-index: 0; /* Below the title bar */
@@ -447,14 +446,18 @@
         overflow: hidden;
         pointer-events: none;
         margin-bottom: 5px;
+        border-radius: 8px;
       }
       .stepbox.open {
         opacity: 1;
-        max-height: 600px;
+        max-height: 600px !important;
         pointer-events: all;
       }
       .hidden {
-        display: none !important;0
+        display: none !important;
+      }
+      #console {
+        max-height: 150px;
       }
       h1 {
         color: #333;
