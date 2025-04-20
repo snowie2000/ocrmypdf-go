@@ -847,13 +847,10 @@
         term.open(terminalContent)
 
         // --- Terminal Resizing ---
-        // Fit the terminal initially
-        try {
+        setTimeout(() => {
           fitAddon.fit()
-        } catch (e) {
-          console.error("Error fitting terminal initially:", e)
-          term.writeln(">>> Error initializing fit addon. <<<")
-        }
+        }, 100)
+        
         // Refit on window resize
         // Debounce resize events for performance
         let resizeTimeout
