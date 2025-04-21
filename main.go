@@ -42,6 +42,7 @@ type taskInfo struct {
 	force    bool
 	result   string
 	status   int32
+	expiry   time.Time
 }
 
 type Resp struct {
@@ -66,6 +67,8 @@ func main() {
 
 	fmt.Println("Server started on http://0.0.0.0:8080")
 	installedLangs, _ = GetInstalledTesseractLanguages()
+
+	go taskCleaner()
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
@@ -137,6 +140,7 @@ func taskByUpload(w http.ResponseWriter, r *http.Request) {
 		rotate:   r.FormValue("rotate") == "on",
 		force:    r.FormValue("force") == "on",
 		result:   path.Join(outputLocation, "ocr_"+filename),
+		expiry:   time.Now().Add(time.Minute * 30),
 	})
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	resp := Resp{
@@ -144,6 +148,29 @@ func taskByUpload(w http.ResponseWriter, r *http.Request) {
 	}
 	encoder := json.NewEncoder(w)
 	encoder.Encode(resp)
+}
+
+func taskCleaner() {
+	for {
+		time.Sleep(time.Minute)
+		removeKeys := make([]string, 0)
+		t := time.Now()
+		taskMap.Range(func(key string, value *taskInfo) bool {
+			if value.expiry.Before(t) {
+				if value.filename != "" {
+					os.Remove(value.filepath)
+				}
+				if value.result != "" {
+					os.Remove(value.result)
+				}
+				removeKeys = append(removeKeys, key)
+			}
+			return true
+		})
+		for _, key := range removeKeys {
+			taskMap.Delete(key)
+		}
+	}
 }
 
 func downloadAsset(w http.ResponseWriter, r *http.Request) {
@@ -160,8 +187,7 @@ func downloadAsset(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"ocr_%s\"", task.filename))
 	http.ServeFile(w, r, task.result)
-	taskMap.Delete(taskId)
-	os.Remove(task.result)
+	task.expiry = time.Now().Add(time.Minute * 3) // downloaded task will have an expiry of 3m
 }
 
 // GetInstalledTesseractLanguages runs the tesseract --list-langs command
@@ -220,7 +246,8 @@ func runTask(w http.ResponseWriter, r *http.Request) {
 	taskResult := 3
 	defer func() {
 		task.status = int32(taskResult)
-		os.Remove(task.filepath)
+		task.expiry = time.Now().Add(time.Minute * 10) // completed task will be removed in 10m
+		os.Remove(task.filepath)                       // remove temp file immediately
 	}()
 
 	log.Printf("Task %s connected, attempting PTY start...\n", taskId)
